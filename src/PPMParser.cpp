@@ -45,6 +45,8 @@ auto PPMParser::parse_image_dimensions()
     } catch (const std::exception& exception) {
         assert(false && "error: width and height not found\n");
     }
+
+    return {};
 }
 
 auto PPMParser::parse_color_max_value() -> std::uint32_t {
