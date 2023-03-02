@@ -1,0 +1,4 @@
+*.ppm
+cmake-build-debug/
+.idea/
+
