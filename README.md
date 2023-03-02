@@ -1,3 +1,4 @@
+![Build Status](https://github.com/dead-tech/ppm-viewer/actions/workflows/build.yml/badge.svg)
 # PPM Viewer
 Terminal PPM Viewer written in C++20.
 
