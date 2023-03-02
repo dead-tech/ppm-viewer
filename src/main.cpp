@@ -22,18 +22,13 @@ auto main(const std::int32_t argc, const char** argv) -> int {
 
     const ParsedPPM parsed_ppm = PPMParser::parse(ppm_file_content);
 
-    fmt::println("debug: found P3 ppm image with width: {}, height: {}", parsed_ppm.width, parsed_ppm.height);
-
-    std::size_t column_count = 0;
-    for (const auto &pixel : parsed_ppm.pixels) {
-        if (column_count == parsed_ppm.width) {
-            fmt::print("\n");
-            column_count = 0;
+    for (std::size_t y = 0; y < parsed_ppm.height; ++y) {
+        for (std::size_t x = 0; x < parsed_ppm.width; ++x) {
+            const auto pixel = parsed_ppm.pixels[y * parsed_ppm.width + x];
+            fmt::print("\x1b[48;2;{};{};{}m   \x1b[0m", pixel.r, pixel.g, pixel.b);
         }
-        fmt::print("\x1b[48;2;{};{};{}m \x1b[0m", pixel.r, pixel.g, pixel.b);
-        ++column_count;
+        fmt::print("\n");
     }
-    fmt::print("\n");
 
     return 0;
 }

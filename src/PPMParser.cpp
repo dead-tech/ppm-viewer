@@ -51,29 +51,35 @@ auto PPMParser::parse_color_max_value() -> std::uint32_t {
     return static_cast<std::uint32_t>(std::stoi(this->read_line()));
 }
 
-auto PPMParser::parse_pixels([[maybe_unused]] const std::uint32_t color_max_value)
-  -> std::vector<Pixel> {
+auto PPMParser::parse_pixels(
+  [[maybe_unused]] const std::uint32_t color_max_value
+) -> std::vector<Pixel> {
     std::vector<std::uint32_t> raw_pixels = {};
 
-    const auto pixels_start =
-      std::string_view{ this->ppm_file_content.begin() + this->cursor,
-                        this->ppm_file_content.end() };
+    std::string pixels_string{ this->ppm_file_content.begin() + this->cursor, this->ppm_file_content.end() };
+    std::replace(pixels_string.begin(), pixels_string.end(), '\n', ' ');
 
-    for (const auto elem : pixels_start | std::views::split(' ')) {
+    for (const auto elem : pixels_string | std::views::split(' ')) {
         const auto view      = elem | std::views::common;
         const auto split_str = std::string{ view.begin(), view.end() };
 
         const auto is_pixel_value = [&split_str]() {
+            if (split_str.size() < 1) { return false; }
+
             for (const auto& ch : split_str) {
-                if (!std::isspace(ch)) { return true; }
+                if (std::isspace(ch)) { return false; }
             }
 
-            return false;
+            return true;
         }();
 
         if (is_pixel_value) {
-            const auto pixel_value = static_cast<std::uint32_t>(std::stoi(split_str));
-            assert(pixel_value <= color_max_value && "error: one pixel component exceeds max color depth");
+            const auto pixel_value =
+              static_cast<std::uint32_t>(std::stoi(split_str));
+            assert(
+              pixel_value <= color_max_value
+              && "error: one pixel component exceeds max color depth"
+            );
             raw_pixels.push_back(pixel_value);
         } else {
             continue;
