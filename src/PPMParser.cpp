@@ -53,12 +53,12 @@ auto PPMParser::parse_color_max_value() -> std::uint32_t {
     return static_cast<std::uint32_t>(std::stoi(this->read_line()));
 }
 
-auto PPMParser::parse_pixels(
-  [[maybe_unused]] const std::uint32_t color_max_value
-) -> std::vector<Pixel> {
+auto PPMParser::parse_pixels(const std::uint32_t color_max_value)
+  -> std::vector<Pixel> {
     std::vector<std::uint32_t> raw_pixels = {};
 
-    std::string pixels_string{ this->ppm_file_content.begin() + this->cursor, this->ppm_file_content.end() };
+    std::string pixels_string{ this->ppm_file_content.begin() + this->cursor,
+                               this->ppm_file_content.end() };
     std::replace(pixels_string.begin(), pixels_string.end(), '\n', ' ');
 
     for (const auto elem : pixels_string | std::views::split(' ')) {
